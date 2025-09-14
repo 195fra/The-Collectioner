@@ -1,5 +1,6 @@
 package com.example.collectioner
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,9 +29,11 @@ import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.collectioner.ui.theme.HomeActivity
 
 
 class MainActivity : ComponentActivity() {
@@ -67,7 +70,7 @@ fun Login_Screen(navController: NavController) {
         mutableStateOf("")
     }
 
-
+    val context = LocalContext.current
 
 
     Column (
@@ -80,7 +83,8 @@ fun Login_Screen(navController: NavController) {
 
         Text("LOGIN",
             modifier = Modifier
-                .padding(20.dp),
+                .align(androidx.compose.ui.Alignment.CenterHorizontally)
+                .padding(top = 30.dp),
             fontSize = 30.sp)
 
 
@@ -90,7 +94,7 @@ fun Login_Screen(navController: NavController) {
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Name") },
+            label = { Text("Nome") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth()
@@ -98,7 +102,7 @@ fun Login_Screen(navController: NavController) {
         OutlinedTextField(
             value = surname,
             onValueChange = { surname = it },
-            label = { Text("Surname") },
+            label = { Text("Email") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth()
@@ -106,7 +110,7 @@ fun Login_Screen(navController: NavController) {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text("Password") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth()
@@ -114,15 +118,19 @@ fun Login_Screen(navController: NavController) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Conferma Password") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth()
         )
+
+
         Spacer(modifier = Modifier.weight(1f))
 
 
-        Button(onClick = {navController.navigate("Home_Screen")},
+        Button(onClick = {
+            val intent = Intent(context, HomeActivity::class.java)
+            context.startActivity(intent)},
             colors = ButtonColors(
                 containerColor = Color.Black,
                 contentColor = Color.White,
@@ -135,9 +143,15 @@ fun Login_Screen(navController: NavController) {
                 .padding(horizontal = 20.dp, vertical = 20.dp),
 
             ) {
-            Text("Login")
+            Text("Accedi")
 
         }
+
+        Text("Se hai già un account effettua il login",
+            modifier = Modifier
+                .align(androidx.compose.ui.Alignment.CenterHorizontally)
+                .padding(bottom = 10.dp),
+            fontSize = 12.sp)
         Spacer(modifier = Modifier.height(70.dp))
 
     }
@@ -166,3 +180,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }*/
+
