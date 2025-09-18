@@ -49,7 +49,7 @@ class HomeActivity : ComponentActivity() {
                             title = { Text("The Collectioner") },
                             navigationIcon = {
                                 IconButton(onClick = { /* azione profilo */ }) {
-                                    Icon(Icons.Filled.Person, contentDescription = "Profilo")
+                                    Icon(Icons.Filled.Person, contentDescription = "Profilo ")
                                 }
                             }
                         )
