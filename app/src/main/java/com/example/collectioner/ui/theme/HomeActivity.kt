@@ -1,6 +1,7 @@
 package com.example.collectioner.ui.theme
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,16 +21,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.collectioner.ArchiveActivity
 import com.example.collectioner.R
 import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
+
+
 
 class HomeActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -166,11 +174,15 @@ class HomeActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun BottomTabBar() {
+
+    val context = LocalContext.current
+
     var selectedIndex by remember { mutableStateOf(0) }
     NavigationBar {
         NavigationBarItem(
             selected = selectedIndex == 0,
-            onClick = { selectedIndex = 0 },
+            onClick = { val intent = Intent(context, HomeActivity::class.java)
+                context.startActivity(intent); selectedIndex= 0},
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
@@ -186,8 +198,10 @@ fun BottomTabBar() {
             label = { Text("Scan") }
         )
         NavigationBarItem(
+
             selected = selectedIndex == 2,
-            onClick = { selectedIndex = 2 },
+            onClick = { val intent = Intent(context, ArchiveActivity::class.java)
+                context.startActivity(intent);selectedIndex=2},
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_storage),
