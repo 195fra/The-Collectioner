@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ArchiveActivity
+import com.example.collectioner.CameraActivity
 import com.example.collectioner.R
 import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
 
@@ -188,7 +189,8 @@ fun BottomTabBar() {
         )
         NavigationBarItem(
             selected = selectedIndex == 1,
-            onClick = { selectedIndex = 1 },
+            onClick = { val intent = Intent(context, CameraActivity::class.java)
+                context.startActivity(intent);selectedIndex = 1 },
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_camera),
