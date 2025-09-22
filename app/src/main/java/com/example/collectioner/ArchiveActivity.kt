@@ -1,7 +1,7 @@
 package com.example.collectioner
 
-import android.os.Bundle
 import android.net.Uri
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,20 +12,17 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import androidx.core.content.FileProvider
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.BottomTabBar
-import java.io.File
 
 class ArchiveActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +39,18 @@ class ArchiveActivity : ComponentActivity() {
 @Composable
 fun ArchiveScreen() {
     var ricerca by remember { mutableStateOf("") }
+
+    val categorie = listOf("tutti","pokemon", "yugioh", "magic", "dragonball")
+    val imageResIds = listOf(
+        R.drawable.image_0,
+        R.drawable.image_1,
+        R.drawable.image_2,
+        R.drawable.image_3,
+        R.drawable.image_4,
+    )
+
+    // Stato per tracciare la categoria selezionata
+    var categoriaSelezionata by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -64,30 +73,35 @@ fun ArchiveScreen() {
 
             Text("My Albums")
 
-            // Lista orizzontale (placeholder)
-            Box(Modifier.height(200.dp)) {
+            // Lista orizzontale con categorie
+            Box(Modifier.height(100.dp)) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
                 ) {
-                    items(10) { index ->
+                    items(categorie.size) { index ->
                         Column(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .padding(vertical = 8.dp)
-                                .clickable { /* Azione click */ },
+                                .clickable {
+                                    // Toggle selezione categoria
+                                    categoriaSelezionata = if (index == 0) null
+                                    else categorie[index]
+                                },
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Image(
-                                painter = rememberAsyncImagePainter(model = R.drawable.ic_launcher_foreground),
-                                contentDescription = "Immagine elemento",
+                                painter = painterResource(id = imageResIds[index]),
+                                contentDescription = "Immagine categoria",
                                 modifier = Modifier
                                     .padding(end = 16.dp)
                                     .size(100.dp)
                             )
                             Text(
-                                text = "Elemento $index",
-                                modifier = Modifier.padding(horizontal = 16.dp)
+                                text = categorie[index],
+                                modifier = Modifier.padding(horizontal = 8.dp)
                             )
                         }
                     }
@@ -98,19 +112,24 @@ fun ArchiveScreen() {
 
             Text("Foto salvate")
 
-            ImageGridFromFiles()
+            // Griglia con immagini filtrate per categoria
+            ImageGridFromFiles(categoriaFiltro = categoriaSelezionata)
         }
     }
 }
 
 @Composable
-fun ImageGridFromFiles() {
+fun ImageGridFromFiles(categoriaFiltro: String?) {
     val context = LocalContext.current
 
-    // Carica le immagini salvate nei file locali
-    val images = remember {
+    // Carica e filtra le immagini in base al nome file e alla categoria
+    val images = remember(categoriaFiltro) {
         context.filesDir
-            .listFiles { file -> file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") }
+            .listFiles { file ->
+                val isImage = file.name.endsWith(".jpg", ignoreCase = true) || file.name.endsWith(".jpeg", ignoreCase = true)
+                val matchesCategoria = categoriaFiltro == null || file.name.contains(categoriaFiltro, ignoreCase = true)
+                isImage && matchesCategoria
+            }
             ?.sortedByDescending { it.lastModified() }
             ?.map {
                 FileProvider.getUriForFile(
@@ -143,8 +162,8 @@ fun ImageGridFromFiles() {
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clickable { /* Azione click */ },
+                        .aspectRatio(1f),
+                        //.clickable { /* Azione click su immagine */ },
                     contentAlignment = Alignment.Center
                 ) {
                     Image(

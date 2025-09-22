@@ -23,9 +23,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 
@@ -39,12 +41,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.rememberAsyncImagePainter
+import com.example.collectioner.ui.theme.BottomTabBar
 import com.example.collectioner.ui.theme.CollectionerTheme
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
-sealed class Screen { object Camera : Screen(); object Gallery : Screen() }
 
 class CameraActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,16 +53,15 @@ class CameraActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CollectionerTheme {
-                var currentScreen by remember { mutableStateOf<Screen>(Screen.Camera) }
                 var lastPhotoUri by remember { mutableStateOf<Uri?>(null) }
-                when (currentScreen) {
-                    is Screen.Camera -> CameraScreen(
-                        onShowGallery = { currentScreen = Screen.Gallery },
-                        onPhotoTaken = { lastPhotoUri = it }
-                    )
-                    is Screen.Gallery -> GalleryScreen(
-                        onBack = { currentScreen = Screen.Camera },
-                        lastPhotoUri = lastPhotoUri
+                Scaffold (
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { BottomTabBar() }
+                ) { innerPadding ->
+                    CameraScreen(
+                        //onShowGallery = {}, // Nessuna azione, la Gallery non esiste
+                        onPhotoTaken = { lastPhotoUri = it },
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
@@ -71,7 +71,11 @@ class CameraActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CameraScreen(onShowGallery: () -> Unit, onPhotoTaken: (Uri?) -> Unit) {
+fun CameraScreen(
+    //onShowGallery: () -> Unit,
+    onPhotoTaken: (Uri?) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var hasCameraPermission by remember {
@@ -90,14 +94,16 @@ fun CameraScreen(onShowGallery: () -> Unit, onPhotoTaken: (Uri?) -> Unit) {
     }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
+
+    var photoName by remember { mutableStateOf("") }  // per rinominare la foto
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TopAppBar(title = { Text("Fotocamera") }, actions = {
-            Button(onClick = onShowGallery) { Text("Galleria") }
-        })
+        //TopAppBar(title = { Text("Fotocamera") })
+
         if (hasCameraPermission) {
             AndroidView(
                 factory = { ctx ->
@@ -126,12 +132,31 @@ fun CameraScreen(onShowGallery: () -> Unit, onPhotoTaken: (Uri?) -> Unit) {
                     .weight(1f)
                     .fillMaxWidth()
             )
+
+
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Categorizza la carta")
+            androidx.compose.material3.OutlinedTextField(
+                value = photoName,
+                onValueChange = { photoName = it },
+                placeholder = { Text("Es. pokemon") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                val photoFile = File(
-                    context.filesDir,
-                    "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}.jpg"
-                )
+                val validName = if (photoName.isNotBlank()) photoName else
+                    "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}"
+                //val sanitizedFileName = validName.replace(Regex("[^a-zA-Z0-9_\\-]"), "_") // evitiamo caratteri strani
+                val fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
+
+                val photoFile = File(context.filesDir, fileNameWithExtension)
+
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
                 imageCapture?.takePicture(
                     outputOptions,
@@ -143,7 +168,7 @@ fun CameraScreen(onShowGallery: () -> Unit, onPhotoTaken: (Uri?) -> Unit) {
                                 context.packageName + ".provider",
                                 photoFile
                             )
-                            Toast.makeText(context, "Foto salvata!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Foto salvata come $fileNameWithExtension", Toast.LENGTH_SHORT).show()
                             onPhotoTaken(imageUri)
                         }
 
@@ -153,59 +178,15 @@ fun CameraScreen(onShowGallery: () -> Unit, onPhotoTaken: (Uri?) -> Unit) {
                     }
                 )
             }) {
-                Icon(Icons.Default.Face, contentDescription = "Scatta foto")
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Scatta foto")
+                Text("Scannerizza")
             }
+
             Spacer(modifier = Modifier.height(16.dp))
-            imageUri?.let {
-                Image(
-                    painter = rememberAsyncImagePainter(it),
-                    contentDescription = "Ultima foto",
-                    modifier = Modifier.size(200.dp)
-                )
-            }
+            /*if (imageUri != null) {
+                Text("Foto scattata")
+            }*/
         } else {
             Text("Permesso fotocamera necessario")
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun GalleryScreen(onBack: () -> Unit, lastPhotoUri: Uri?) {
-    val context = LocalContext.current
-    val images = remember {
-        context.filesDir.listFiles { file -> file.name.endsWith(".jpg") || file.name.endsWith(".jpeg") }
-            ?.sortedByDescending { it.lastModified() }
-            ?.map { FileProvider.getUriForFile(context, context.packageName + ".provider", it) }
-            ?: emptyList()
-    }
-    Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(title = { Text("Galleria") }, navigationIcon = {
-            Button(onClick = onBack) { Text("Indietro") }
-        })
-        if (images.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nessuna foto trovata")
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(120.dp),
-                modifier = Modifier.fillMaxSize().padding(8.dp)
-            ) {
-                items(images) { uri ->
-                    Image(
-                        painter = rememberAsyncImagePainter(uri),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .size(120.dp)
-                            .clickable { /* Qui puoi aggiungere azioni, es: ingrandire la foto */ }
-                    )
-                }
-            }
-        }
-    }
-}
-
