@@ -1,4 +1,4 @@
-package com.example.collectioner
+/* package com.example.collectioner
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -70,3 +70,4 @@ fun AnimatedSplashScreenPreview() {
     AnimatedSplashScreen()
 }
 
+*/

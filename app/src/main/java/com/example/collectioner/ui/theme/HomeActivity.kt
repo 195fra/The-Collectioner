@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ArchiveActivity
 import com.example.collectioner.R
+import com.example.collectioner.PrimaryTextColor
 import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
 
 
@@ -46,10 +47,10 @@ class HomeActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         CenterAlignedTopAppBar(
-                            title = { Text("The Collectioner") },
+                            title = { Text("The Collectioner", color = PrimaryTextColor) },
                             navigationIcon = {
                                 IconButton(onClick = { /* azione profilo */ }) {
-                                    Icon(Icons.Filled.Person, contentDescription = "Profilo ")
+                                    Icon(Icons.Filled.Person, contentDescription = "Profilo ", tint = PrimaryTextColor)
                                 }
                             }
                         )
@@ -88,7 +89,7 @@ class HomeActivity : ComponentActivity() {
                                         verticalArrangement = Arrangement.Center,
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     ) {
-                                        Text(text = "Favourite ${index + 1}", color = Color.Black)
+                                        Text(text = "Favourite ${index + 1}", color = PrimaryTextColor)
                                         Spacer(modifier = Modifier.height(4.dp))
                                         //Text(text = "Descrizione breve", color = Color.DarkGray)
                                     }
@@ -121,8 +122,8 @@ class HomeActivity : ComponentActivity() {
                                 Text(text = "Favourite Card",
                                     modifier = Modifier
                                         .padding(16.dp),
-                                    color = Color.Black,
-                                    )
+                                    color = PrimaryTextColor,
+                                )
                             }
 
                         }
@@ -141,7 +142,7 @@ class HomeActivity : ComponentActivity() {
                                     .clickable { /* azione box 1 */ },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Box cliccabile 1", color = Color.Black)
+                                Text("Box cliccabile 1", color = PrimaryTextColor)
                             }
                             Box(
                                 modifier = Modifier
@@ -151,7 +152,7 @@ class HomeActivity : ComponentActivity() {
                                     .clickable { /* azione box 2 */ },
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Box cliccabile 2", color = Color.Black)
+                                Text("Box cliccabile 2", color = PrimaryTextColor)
                             }
                         }
 
@@ -183,8 +184,8 @@ fun BottomTabBar() {
             selected = selectedIndex == 0,
             onClick = { val intent = Intent(context, HomeActivity::class.java)
                 context.startActivity(intent); selectedIndex= 0},
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-            label = { Text("Home") }
+            icon = { Icon(Icons.Filled.Home, contentDescription = "Home", tint = PrimaryTextColor) },
+            label = { Text("Home", color = PrimaryTextColor) }
         )
         NavigationBarItem(
             selected = selectedIndex == 1,
@@ -192,10 +193,11 @@ fun BottomTabBar() {
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_camera),
-                    contentDescription = "Scan"
+                    contentDescription = "Scan",
+                    tint = PrimaryTextColor
                 )
             },
-            label = { Text("Scan") }
+            label = { Text("Scan", color = PrimaryTextColor) }
         )
         NavigationBarItem(
 
@@ -205,10 +207,11 @@ fun BottomTabBar() {
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_storage),
-                    contentDescription = "Archivio"
+                    contentDescription = "Archivio",
+                    tint = PrimaryTextColor
                 )
             },
-            label = { Text("Archivio") }
+            label = { Text("Archivio", color = PrimaryTextColor) }
         )
     }
 }
