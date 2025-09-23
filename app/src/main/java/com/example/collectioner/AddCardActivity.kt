@@ -1,5 +1,6 @@
 package com.example.collectioner
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ui.theme.PrimaryTextColor
+import com.google.gson.Gson
 
 class AddCardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,10 +32,8 @@ class AddCardActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CollectionerTheme {
-                    AddCardScreen(
-
-                    )
-
+                val photoUri = intent.getStringExtra("photoUri") ?: ""
+                AddCardScreen(photoUri = photoUri)
             }
         }
     }
@@ -41,7 +41,7 @@ class AddCardActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCardScreen() {
+fun AddCardScreen(photoUri: String) {
     var nomeCarta by remember { mutableStateOf("") }
     var giocoDiCarte by remember { mutableStateOf("") }
     var numeroCarta by remember { mutableStateOf("") }
@@ -50,6 +50,7 @@ fun AddCardScreen() {
     var artistaCarta by remember { mutableStateOf("") }
     var condizioniCarta by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -118,7 +119,37 @@ fun AddCardScreen() {
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    val cardData = CardData(
+                        photoUri = photoUri,
+                        nomeCarta = nomeCarta,
+                        giocoDiCarte = giocoDiCarte,
+                        numeroCarta = numeroCarta,
+                        setCarta = setCarta,
+                        raritaCarta = raritaCarta,
+                        artistaCarta = artistaCarta,
+                        condizioniCarta = condizioniCarta
+                    )
+                    val gson = Gson()
+                    val fileName = "cards.json"
+                    val file = java.io.File(context.filesDir, fileName)
+                    val cardList: MutableList<CardData> = if (file.exists()) {
+                        try {
+                            val json = file.readText()
+                            gson.fromJson(json, Array<CardData>::class.java)?.toMutableList() ?: mutableListOf()
+                        } catch (e: Exception) {
+                            mutableListOf()
+                        }
+                    } else {
+                        mutableListOf()
+                    }
+                    cardList.add(cardData)
+                    val jsonString = gson.toJson(cardList)
+                    file.writeText(jsonString)
+                    android.widget.Toast.makeText(context, "Carta salvata!", android.widget.Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, ArchiveActivity::class.java)
+                    context.startActivity(intent)
+                },
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 colors = ButtonDefaults.buttonColors(containerColor = PrimaryTextColor)
             ) {
@@ -131,7 +162,7 @@ fun AddCardScreen() {
 @Preview(showBackground = true)
 @Composable
 fun AddCardScreenPreview() {
-    AddCardScreen()
+    AddCardScreen(photoUri = "")
 }
 
 
@@ -151,3 +182,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }*/
+

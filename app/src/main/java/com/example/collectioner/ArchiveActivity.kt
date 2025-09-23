@@ -1,5 +1,6 @@
 package com.example.collectioner
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,6 +24,8 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.core.content.FileProvider
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.BottomTabBar
+import com.google.gson.Gson
+import java.io.File
 
 class ArchiveActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,26 +124,24 @@ fun ArchiveScreen() {
 @Composable
 fun ImageGridFromFiles(categoriaFiltro: String?) {
     val context = LocalContext.current
-
-    // Carica e filtra le immagini in base al nome file e alla categoria
-    val images = remember(categoriaFiltro) {
-        context.filesDir
-            .listFiles { file ->
-                val isImage = file.name.endsWith(".jpg", ignoreCase = true) || file.name.endsWith(".jpeg", ignoreCase = true)
-                val matchesCategoria = categoriaFiltro == null || file.name.contains(categoriaFiltro, ignoreCase = true)
-                isImage && matchesCategoria
-            }
-            ?.sortedByDescending { it.lastModified() }
-            ?.map {
-                FileProvider.getUriForFile(
-                    context,
-                    "${context.packageName}.provider",
-                    it
-                )
-            } ?: emptyList()
+    val gson = Gson()
+    // Carica la lista di CardData da cards.json
+    val cardList = remember(categoriaFiltro) {
+        val file = java.io.File(context.filesDir, "cards.json")
+        if (file.exists()) {
+            val json = file.readText()
+            gson.fromJson(json, Array<CardData>::class.java)?.toList() ?: emptyList()
+        } else {
+            emptyList()
+        }
     }
-
-    if (images.isEmpty()) {
+    // Filtra la lista per categoria e inverti l'ordine per mostrare prima le più recenti
+    val filteredCards = if (categoriaFiltro == null) {
+        cardList.asReversed()
+    } else {
+        cardList.filter { it.giocoDiCarte.equals(categoriaFiltro, ignoreCase = true) }.asReversed()
+    }
+    if (filteredCards.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -157,17 +158,24 @@ fun ImageGridFromFiles(categoriaFiltro: String?) {
                 .padding(top = 8.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
-            items(images) { uri: Uri ->
+            items(filteredCards.size) { index ->
+                val card = filteredCards[index]
                 Box(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxWidth()
-                        .aspectRatio(1f),
-                        //.clickable { /* Azione click su immagine */ },
+                        .aspectRatio(1f)
+                        .clickable {
+                            // Passa i dati della carta selezionata come JSON
+                            val intent = Intent(context, DetailsCardActivity::class.java)
+                            val cardJson = gson.toJson(card)
+                            intent.putExtra("cardDataJson", cardJson)
+                            context.startActivity(intent)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = rememberAsyncImagePainter(uri),
+                        painter = rememberAsyncImagePainter(card.photoUri),
                         contentDescription = "Foto salvata",
                         modifier = Modifier.fillMaxSize()
                     )

@@ -43,9 +43,21 @@ import androidx.core.content.FileProvider
 import coil.compose.rememberAsyncImagePainter
 import com.example.collectioner.ui.theme.BottomTabBar
 import com.example.collectioner.ui.theme.CollectionerTheme
+import com.google.gson.Gson
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
+data class CardData(
+    val photoUri: String,
+    val nomeCarta: String,
+    val giocoDiCarte: String,
+    val numeroCarta: String,
+    val setCarta: String,
+    val raritaCarta: String,
+    val artistaCarta: String,
+    val condizioniCarta: String
+)
 
 class CameraActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,8 +71,15 @@ class CameraActivity : ComponentActivity() {
                     bottomBar = { BottomTabBar() }
                 ) { innerPadding ->
                     CameraScreen(
-                        //onShowGallery = {}, // Nessuna azione, la Gallery non esiste
-                        onPhotoTaken = { lastPhotoUri = it },
+                        onPhotoTaken = { uri ->
+                            lastPhotoUri = uri
+                            // Passa l'URI a AddCardActivity
+                            uri?.let {
+                                val intent = android.content.Intent(this, AddCardActivity::class.java)
+                                intent.putExtra("photoUri", it.toString())
+                                startActivity(intent)
+                            }
+                        },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -72,7 +91,6 @@ class CameraActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(
-    //onShowGallery: () -> Unit,
     onPhotoTaken: (Uri?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -152,12 +170,18 @@ fun CameraScreen(
             Button(onClick = {
                 val validName = if (photoName.isNotBlank()) photoName else
                     "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}"
-                //val sanitizedFileName = validName.replace(Regex("[^a-zA-Z0-9_\\-]"), "_") // evitiamo caratteri strani
-                val fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
-
-                val photoFile = File(context.filesDir, fileNameWithExtension)
-
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+                // Se il nome esiste già, aggiungi un suffisso numerico per evitare sovrascrittura
+                var fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
+                val dir = context.filesDir
+                var file = File(dir, fileNameWithExtension)
+                var suffix = 1
+                while (file.exists()) {
+                    val baseName = validName.removeSuffix(".jpg")
+                    fileNameWithExtension = "${baseName}_$suffix.jpg"
+                    file = File(dir, fileNameWithExtension)
+                    suffix++
+                }
+                val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
                 imageCapture?.takePicture(
                     outputOptions,
                     ContextCompat.getMainExecutor(context),
@@ -166,7 +190,7 @@ fun CameraScreen(
                             imageUri = FileProvider.getUriForFile(
                                 context,
                                 context.packageName + ".provider",
-                                photoFile
+                                file
                             )
                             Toast.makeText(context, "Foto salvata come $fileNameWithExtension", Toast.LENGTH_SHORT).show()
                             onPhotoTaken(imageUri)
