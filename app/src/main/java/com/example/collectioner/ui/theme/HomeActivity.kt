@@ -27,8 +27,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ArchiveActivity
 import com.example.collectioner.CameraActivity
+import com.example.collectioner.CardData
+import com.example.collectioner.DetailsCardActivity
 import com.example.collectioner.R
 import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
+import com.google.gson.Gson
 
 
 
@@ -66,7 +69,7 @@ class HomeActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-                        // LazyRow visibile correttamente
+                        /*// LazyRow visibile correttamente
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -95,13 +98,25 @@ class HomeActivity : ComponentActivity() {
                                     }
                                 }
                             }
+                        }*/
+
+
+                        // Box centrale: mostra la carta preferita
+                        val context = LocalContext.current
+                        val gson = Gson()
+                        var preferita by remember { mutableStateOf<CardData?>(null) }
+                        LaunchedEffect(Unit) {
+                            val file = java.io.File(context.filesDir, "cards.json")
+                            if (file.exists()) {
+                                val json = file.readText()
+                                val cardList = gson.fromJson(json, Array<CardData>::class.java)?.toList() ?: emptyList()
+                                preferita = cardList.firstOrNull { it.preferito }
+                            }
                         }
-
-
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(400.dp)
+                                .height(500.dp)
                                 .padding(16.dp)
                                 .background(
                                     Color(0xFFE0E0E0),
@@ -109,21 +124,34 @@ class HomeActivity : ComponentActivity() {
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Column (horizontalAlignment = CenterHorizontally){
+                            if (preferita != null) {
+                                Column(horizontalAlignment = CenterHorizontally) {
+                                    Image(
+                                        painter = coil.compose.rememberAsyncImagePainter(preferita!!.photoUri),
+                                        contentDescription = "Immagine carta preferita",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(400.dp)
+                                            .padding(16.dp)
 
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_camera),
-                                    contentDescription = "Immagine di esempio",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(300.dp)
-                                        .padding(16.dp)
-                                )
-                                Text(text = "Favourite Card",
-                                    modifier = Modifier
-                                        .padding(16.dp),
-                                    color = Color.Black,
                                     )
+                                    Text(text = preferita!!.nomeCarta, modifier = Modifier.padding(4.dp), color = Color.Black)
+                                    //Text(text = preferita!!.giocoDiCarte, modifier = Modifier.padding(4.dp), color = Color.DarkGray)
+                                    //Text(text = "Set: ${preferita!!.setCarta}", modifier = Modifier.padding(4.dp), color = Color.DarkGray)
+                                }
+                            } else {
+                                Column(horizontalAlignment = CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_camera),
+                                        contentDescription = "Immagine di esempio",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(300.dp)
+                                            .padding(16.dp)
+                                    )
+                                    Text(text = "Favourite Card", modifier = Modifier.padding(16.dp), color = Color.Black)
+                                    Text(text = "Nessuna carta preferita trovata", color = Color.Gray)
+                                }
                             }
 
                         }
