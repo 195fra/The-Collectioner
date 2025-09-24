@@ -74,13 +74,15 @@ fun AddCardScreen(photoUri: String) {
                 value = nomeCarta,
                 onValueChange = { nomeCarta = it },
                 label = { Text("Nome carta", color = PrimaryTextColor) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
             )
             OutlinedTextField(
                 value = giocoDiCarte,
                 onValueChange = { giocoDiCarte = it },
                 label = { Text("Gioco di carte", color = PrimaryTextColor) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -90,32 +92,37 @@ fun AddCardScreen(photoUri: String) {
                     value = setCarta,
                     onValueChange = { setCarta = it },
                     label = { Text("Set", color = PrimaryTextColor) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
                 OutlinedTextField(
                     value = numeroCarta,
                     onValueChange = { numeroCarta = it },
                     label = { Text("Numero", color = PrimaryTextColor) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
                 )
             }
             OutlinedTextField(
                 value = raritaCarta,
                 onValueChange = { raritaCarta = it },
                 label = { Text("Rarità", color = PrimaryTextColor) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
             )
             OutlinedTextField(
                 value = artistaCarta,
                 onValueChange = { artistaCarta = it },
                 label = { Text("Artista", color = PrimaryTextColor) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
             )
             OutlinedTextField(
                 value = condizioniCarta,
                 onValueChange = { condizioniCarta = it },
                 label = { Text("Condizioni carta", color = PrimaryTextColor) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(

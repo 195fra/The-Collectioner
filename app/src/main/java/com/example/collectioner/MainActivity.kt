@@ -97,7 +97,8 @@ fun Login_Screen(navController: NavController) {
             label = { Text("Nome") },
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
         )
         OutlinedTextField(
             value = surname,
@@ -105,7 +106,8 @@ fun Login_Screen(navController: NavController) {
             label = { Text("Email") },
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
         )
         OutlinedTextField(
             value = email,
@@ -113,7 +115,8 @@ fun Login_Screen(navController: NavController) {
             label = { Text("Password") },
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
         )
         OutlinedTextField(
             value = password,
@@ -121,7 +124,8 @@ fun Login_Screen(navController: NavController) {
             label = { Text("Conferma Password") },
             modifier = Modifier
                 .padding(20.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
         )
 
 
