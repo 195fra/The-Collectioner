@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,11 +51,32 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val context = LocalContext.current
+                    Button(
+                        onClick = {
+                            if (context is ComponentActivity) {
+                                context.onBackPressedDispatcher.onBackPressed()
+                            }
+                        },
+
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Torna indietro",
+                            tint = Color.Black
+                        )
+                    }
+                }
                 Image(
                     painter = rememberAsyncImagePainter(cardData.photoUri),
                     contentDescription = "Immagine carta",
                     modifier = Modifier
-                        .size(220.dp)
+                        .size(400.dp)
                         .padding(8.dp)
                 )
                 Text("Nome: ${cardData.nomeCarta}", style = MaterialTheme.typography.titleMedium)

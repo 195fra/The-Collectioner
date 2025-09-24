@@ -57,7 +57,7 @@ fun ArchiveScreen() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        bottomBar = { BottomTabBar() }
+        bottomBar = { BottomTabBar(index = 2) }
     ) { innerPadding ->
         Column(
             modifier = Modifier

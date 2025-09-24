@@ -56,7 +56,7 @@ class HomeActivity : ComponentActivity() {
                         )
                     },
                     bottomBar = {
-                        BottomTabBar()
+                        BottomTabBar(index = 0)
                     }
                 ) { innerPadding ->
 
@@ -172,25 +172,23 @@ class HomeActivity : ComponentActivity() {
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun BottomTabBar() {
-
+fun BottomTabBar(index : Int) {
     val context = LocalContext.current
-
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableStateOf(index) }
     NavigationBar {
         NavigationBarItem(
             selected = selectedIndex == 0,
             onClick = { val intent = Intent(context, HomeActivity::class.java)
-                context.startActivity(intent); selectedIndex= 0},
+                context.startActivity(intent); },
             icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
             label = { Text("Home") }
         )
         NavigationBarItem(
             selected = selectedIndex == 1,
             onClick = { val intent = Intent(context, CameraActivity::class.java)
-                context.startActivity(intent);selectedIndex = 1 },
+                context.startActivity(intent);},
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_camera),
@@ -200,10 +198,9 @@ fun BottomTabBar() {
             label = { Text("Scan") }
         )
         NavigationBarItem(
-
             selected = selectedIndex == 2,
             onClick = { val intent = Intent(context, ArchiveActivity::class.java)
-                context.startActivity(intent);selectedIndex=2},
+                context.startActivity(intent);},
             icon = {
                 Icon(
                     painterResource(id = R.drawable.ic_storage),

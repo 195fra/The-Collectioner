@@ -68,7 +68,7 @@ class CameraActivity : ComponentActivity() {
                 var lastPhotoUri by remember { mutableStateOf<Uri?>(null) }
                 Scaffold (
                     modifier = Modifier.fillMaxSize(),
-                    bottomBar = { BottomTabBar() }
+                    bottomBar = { BottomTabBar(index = 1) }
                 ) { innerPadding ->
                     CameraScreen(
                         onPhotoTaken = { uri ->
@@ -150,21 +150,6 @@ fun CameraScreen(
                     .weight(1f)
                     .fillMaxWidth()
             )
-
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Text("Categorizza la carta")
-            androidx.compose.material3.OutlinedTextField(
-                value = photoName,
-                onValueChange = { photoName = it },
-                placeholder = { Text("Es. pokemon") },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
