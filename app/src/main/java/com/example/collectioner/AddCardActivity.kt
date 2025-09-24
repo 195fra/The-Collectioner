@@ -128,7 +128,8 @@ fun AddCardScreen(photoUri: String) {
                         setCarta = setCarta,
                         raritaCarta = raritaCarta,
                         artistaCarta = artistaCarta,
-                        condizioniCarta = condizioniCarta
+                        condizioniCarta = condizioniCarta,
+                        preferito = false // aggiunto campo preferito
                     )
                     val gson = Gson()
                     val fileName = "cards.json"

@@ -56,7 +56,8 @@ data class CardData(
     val setCarta: String,
     val raritaCarta: String,
     val artistaCarta: String,
-    val condizioniCarta: String
+    val condizioniCarta: String,
+    val preferito: Boolean = false
 )
 
 class CameraActivity : ComponentActivity() {

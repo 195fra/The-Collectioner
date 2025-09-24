@@ -1,5 +1,6 @@
 package com.example.collectioner
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,14 +57,17 @@ fun DetailsCardScreen(cardDataJson: String?) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     val context = LocalContext.current
+                    var preferito by remember { mutableStateOf(cardData.preferito) }
+
+
                     Button(
                         onClick = {
-                            if (context is ComponentActivity) {
-                                context.onBackPressedDispatcher.onBackPressed()
-                            }
+                            val intent = Intent(context, ArchiveActivity::class.java)
+                            context.startActivity(intent)
                         },
 
                     ) {
@@ -69,6 +75,35 @@ fun DetailsCardScreen(cardDataJson: String?) {
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Torna indietro",
                             tint = Color.Black
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    IconButton(onClick = {
+                        preferito = !preferito
+                        // Aggiorna il valore nel JSON
+                        val gson = Gson()
+                        val fileName = "cards.json"
+                        val file = java.io.File(context.filesDir, fileName)
+                        val cardList: MutableList<CardData> = if (file.exists()) {
+                            try {
+                                val json = file.readText()
+                                gson.fromJson(json, Array<CardData>::class.java)?.toMutableList() ?: mutableListOf()
+                            } catch (e: Exception) {
+                                mutableListOf()
+                            }
+                        } else {
+                            mutableListOf()
+                        }
+                        val index = cardList.indexOfFirst { it.nomeCarta == cardData.nomeCarta && it.numeroCarta == cardData.numeroCarta }
+                        if (index != -1) {
+                            cardList[index] = cardList[index].copy(preferito = preferito)
+                            file.writeText(gson.toJson(cardList))
+                        }
+                    }) {
+                        Icon(
+                            imageVector = if (preferito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                            contentDescription = if (preferito) "Preferito" else "Non preferito",
+                            tint = if (preferito) Color.Red else Color.Gray
                         )
                     }
                 }
