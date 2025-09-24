@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ArchiveActivity
@@ -51,11 +52,11 @@ class HomeActivity : ComponentActivity() {
                     topBar = {
                         CenterAlignedTopAppBar(
                             title = { Text("The Collectioner") },
-                            navigationIcon = {
+                            /*navigationIcon = {
                                 IconButton(onClick = { /* azione profilo */ }) {
                                     Icon(Icons.Filled.Person, contentDescription = "Profilo")
                                 }
-                            }
+                            }*/
                         )
                     },
                     bottomBar = {
@@ -105,12 +106,21 @@ class HomeActivity : ComponentActivity() {
                         val context = LocalContext.current
                         val gson = Gson()
                         var preferita by remember { mutableStateOf<CardData?>(null) }
+                        var cardCounts by remember { mutableStateOf(mapOf<String, Int>()) }
+                        val categorie = listOf("pokemon", "yugioh", "magic", "dragonball")
                         LaunchedEffect(Unit) {
                             val file = java.io.File(context.filesDir, "cards.json")
                             if (file.exists()) {
                                 val json = file.readText()
                                 val cardList = gson.fromJson(json, Array<CardData>::class.java)?.toList() ?: emptyList()
                                 preferita = cardList.firstOrNull { it.preferito }
+                                // Conta solo le carte delle 4 categorie specificate
+                                val counts = categorie.associateWith { cat ->
+                                    cardList.count { it.giocoDiCarte == cat }
+                                }
+                                cardCounts = counts
+                            } else {
+                                cardCounts = categorie.associateWith { 0 }
                             }
                         }
                         Box(
@@ -146,17 +156,19 @@ class HomeActivity : ComponentActivity() {
                                         contentDescription = "Immagine di esempio",
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .height(300.dp)
+                                            .height(200.dp)
                                             .padding(16.dp)
                                     )
-                                    Text(text = "Favourite Card", modifier = Modifier.padding(16.dp), color = Color.Black)
-                                    Text(text = "Nessuna carta preferita trovata", color = Color.Gray)
+                                    //Text(text = "Favourite Card", modifier = Modifier.padding(16.dp), color = Color.Black)
+                                    Text(text = "Mettina una carta tra i referiti per vederla quà\n" +
+                                            "oppure scannerizzaen una se non l'hai ancora fatto", color = Color.Black,
+                                        textAlign = TextAlign.Center)
                                 }
                             }
 
                         }
 
-                        Row(
+                        /*Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -182,17 +194,40 @@ class HomeActivity : ComponentActivity() {
                             ) {
                                 Text("Box cliccabile 2", color = Color.Black)
                             }
-                        }
-
-                        Row(
+                        }*/
+                        // Box con conteggio categorie in fondo
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .background(
+                                    Color(0xFF222222),
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                                )
                                 .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            contentAlignment = Alignment.Center
                         ) {
-
+                            Column {
+                                Text("LE MIE CARTE", color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    categorie.forEach { cat ->
+                                        Column(horizontalAlignment = CenterHorizontally) {
+                                            Text(text = cat, color = Color.White)
+                                            Text(
+                                                text = cardCounts[cat]?.toString() ?: "0",
+                                                color = Color.Yellow,
+                                                style = MaterialTheme.typography.titleLarge
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
+
                     }
                 }
             }

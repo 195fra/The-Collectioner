@@ -65,16 +65,18 @@ fun ArchiveScreen() {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            OutlinedTextField(
+            /*OutlinedTextField(
                 value = ricerca,
                 onValueChange = { ricerca = it },
                 label = { Text("Cerca") },
                 modifier = Modifier
                     .padding(20.dp)
                     .fillMaxWidth()
-            )
+            )*/
 
-            Text("My Albums")
+            Spacer(Modifier.height(16.dp))
+
+            Text("I MIEI ALBUM", modifier = Modifier.align(Alignment.CenterHorizontally))
 
             // Lista orizzontale con categorie
             Box(Modifier.height(100.dp)) {
@@ -113,7 +115,7 @@ fun ArchiveScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Foto salvate")
+            Text("Carte Salvate")
 
             // Griglia con immagini filtrate per categoria
             ImageGridFromFiles(categoriaFiltro = categoriaSelezionata)
@@ -148,7 +150,7 @@ fun ImageGridFromFiles(categoriaFiltro: String?) {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text("Nessuna immagine trovata.")
+            Text("Non hai ancora salvato nessuna carta in questa categoria")
         }
     } else {
         LazyVerticalGrid(
