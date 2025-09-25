@@ -130,7 +130,7 @@ fun AddCardScreen(photoUri: String) {
                     val cardData = CardData(
                         photoUri = photoUri,
                         nomeCarta = nomeCarta,
-                        giocoDiCarte = giocoDiCarte,
+                        giocoDiCarte = giocoDiCarte.lowercase(),
                         numeroCarta = numeroCarta,
                         setCarta = setCarta,
                         raritaCarta = raritaCarta,
