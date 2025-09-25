@@ -13,6 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 
 class ProfiloActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +26,24 @@ class ProfiloActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ProfiloScreen()
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        ProfiloScreen()
+                        // Bottone indietro in alto a sinistra
+                        androidx.compose.material3.IconButton(
+                            onClick = {
+                                // Torna indietro di un passo nello stack delle activity
+                                finish()
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(16.dp)
+                        ) {
+                            androidx.compose.material3.Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Torna alla Home"
+                            )
+                        }
+                    }
                 }
             }
         }
