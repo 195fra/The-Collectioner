@@ -40,6 +40,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val savedEmail = sharedPref.getString("email", null)
+        if (savedEmail != null && savedEmail.isNotEmpty()) {
+            // Se l'email è già salvata, vai direttamente alla HomeActivity
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
         setContent {
             CollectionerTheme {
                 val navController = rememberNavController()
@@ -47,7 +56,6 @@ class MainActivity : ComponentActivity() {
                     composable("Login_Screen") { Login_Screen(navController) }
                     composable("Home_Screen") { Home_Screen() }
                 }
-
             }
         }
     }
@@ -57,20 +65,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Login_Screen(navController: NavController) {
-    var name by remember {
-        mutableStateOf("")
-    }
-    var surname by remember {
-        mutableStateOf("")
-    }
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-
+    var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val activity = context as? ComponentActivity
 
 
     Column (
@@ -133,20 +133,24 @@ fun Login_Screen(navController: NavController) {
 
 
         Button(onClick = {
+            // Salva la mail se compilata
+            if (email.isNotBlank()) {
+                activity?.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)?.edit()?.putString("email", email)?.apply()
+            }
             val intent = Intent(context, HomeActivity::class.java)
-            context.startActivity(intent)},
-            colors = ButtonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White,
-                disabledContentColor = Color.Black,
-                disabledContainerColor = Color.White
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .padding(horizontal = 20.dp, vertical = 20.dp),
-
-            ) {
+            context.startActivity(intent)
+        },
+        colors = ButtonColors(
+            containerColor = Color.Black,
+            contentColor = Color.White,
+            disabledContentColor = Color.Black,
+            disabledContainerColor = Color.White
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(horizontal = 20.dp, vertical = 20.dp),
+        ) {
             Text("Accedi")
 
         }

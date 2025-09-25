@@ -53,7 +53,10 @@ class HomeActivity : ComponentActivity() {
                         CenterAlignedTopAppBar(
                             title = { Text("The Collectioner") },
                             navigationIcon = {
-                                IconButton(onClick = { /* AGGIUNGI IL PROFILO!!!!! */ }) {
+                                IconButton(onClick = {
+                                    val intent = Intent(this@HomeActivity, ProfiloActivity::class.java)
+                                    startActivity(intent)
+                                }) {
                                     Icon(Icons.Filled.Person, contentDescription = "Profilo")
                                 }
                             }
