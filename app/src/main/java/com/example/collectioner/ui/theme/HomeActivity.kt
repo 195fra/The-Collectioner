@@ -52,11 +52,11 @@ class HomeActivity : ComponentActivity() {
                     topBar = {
                         CenterAlignedTopAppBar(
                             title = { Text("The Collectioner") },
-                            /*navigationIcon = {
-                                IconButton(onClick = { /* azione profilo */ }) {
+                            navigationIcon = {
+                                IconButton(onClick = { /* AGGIUNGI IL PROFILO!!!!! */ }) {
                                     Icon(Icons.Filled.Person, contentDescription = "Profilo")
                                 }
-                            }*/
+                            }
                         )
                     },
                     bottomBar = {
@@ -70,7 +70,7 @@ class HomeActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-                        /*// LazyRow visibile correttamente
+                        /*// LazyRow
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -160,8 +160,7 @@ class HomeActivity : ComponentActivity() {
                                             .padding(16.dp)
                                     )
                                     //Text(text = "Favourite Card", modifier = Modifier.padding(16.dp), color = Color.Black)
-                                    Text(text = "Mettina una carta tra i referiti per vederla quà\n" +
-                                            "oppure scannerizzaen una se non l'hai ancora fatto", color = Color.Black,
+                                    Text(text = "Aggiungi una carta ai preferiti per poterla visualizzare qui", color = Color.Black,
                                         textAlign = TextAlign.Center)
                                 }
                             }
