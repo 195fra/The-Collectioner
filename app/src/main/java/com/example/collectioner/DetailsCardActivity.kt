@@ -12,6 +12,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.*
@@ -112,6 +113,37 @@ fun DetailsCardScreen(cardDataJson: String?) {
                             imageVector = if (preferito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = if (preferito) "Preferito" else "Non preferito",
                             tint = if (preferito) Color.Red else Color.Gray
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    // Bottone elimina carta
+                    IconButton(onClick = {
+                        val gson = Gson()
+                        val fileName = "cards.json"
+                        val file = java.io.File(context.filesDir, fileName)
+                        val cardList: MutableList<CardData> = if (file.exists()) {
+                            try {
+                                val json = file.readText()
+                                gson.fromJson(json, Array<CardData>::class.java)?.toMutableList() ?: mutableListOf()
+                            } catch (e: Exception) {
+                                mutableListOf()
+                            }
+                        } else {
+                            mutableListOf()
+                        }
+                        // Rimuovi la carta corrente
+                        val removed = cardList.removeIf { it.nomeCarta == cardData.nomeCarta && it.numeroCarta == cardData.numeroCarta }
+                        if (removed) {
+                            file.writeText(gson.toJson(cardList))
+                            // Torna all'archivio dopo l'eliminazione
+                            val intent = Intent(context, ArchiveActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    }) {
+                        Icon(
+                            imageVector = androidx.compose.material.icons.Icons.Filled.Delete,
+                            contentDescription = "Elimina carta",
+                            tint = Color.White
                         )
                     }
                 }
