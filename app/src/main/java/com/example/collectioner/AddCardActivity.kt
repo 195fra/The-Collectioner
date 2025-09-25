@@ -97,7 +97,12 @@ fun AddCardScreen(photoUri: String) {
                 )
                 OutlinedTextField(
                     value = numeroCarta,
-                    onValueChange = { numeroCarta = it },
+                    onValueChange = { newValue ->
+                        // Consenti solo numeri
+                        if (newValue.all { it.isDigit() }) {
+                            numeroCarta = newValue
+                        }
+                    },
                     label = { Text("Numero", color = PrimaryTextColor) },
                     modifier = Modifier.weight(1f),
                     textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)

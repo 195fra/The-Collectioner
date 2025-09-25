@@ -153,7 +153,7 @@ class HomeActivity : ComponentActivity() {
                                             .padding(16.dp)
 
                                     )
-                                    Text(text = preferita!!.nomeCarta, modifier = Modifier.padding(4.dp), color = Color.Black)
+                                    Text(text = preferita!!.nomeCarta, modifier = Modifier.padding(4.dp), color = Color.White)
                                     //Text(text = preferita!!.giocoDiCarte, modifier = Modifier.padding(4.dp), color = Color.DarkGray)
                                     //Text(text = "Set: ${preferita!!.setCarta}", modifier = Modifier.padding(4.dp), color = Color.DarkGray)
                                 }
