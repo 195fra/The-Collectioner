@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import com.example.collectioner.ui.theme.CollectionerTheme
+import com.example.collectioner.ui.theme.PrimaryBackgroundColor
 import com.google.gson.Gson
 
 class DetailsCardActivity : ComponentActivity() {
@@ -48,8 +49,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
     }
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black), // Imposta sfondo nero
+            .fillMaxSize(), // RIMOSSO .background(Color.Black)
         contentAlignment = Alignment.Center
     ) {
         if (cardData != null) {
@@ -73,17 +73,16 @@ fun DetailsCardScreen(cardDataJson: String?) {
                     var preferito by remember { mutableStateOf(cardData.preferito) }
 
 
-                    Button(
+                    IconButton(
                         onClick = {
                             val intent = Intent(context, ArchiveActivity::class.java)
                             context.startActivity(intent)
-                        },
-
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Torna indietro",
-                            tint = Color.Black
+                            tint = PrimaryBackgroundColor
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
@@ -112,7 +111,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         Icon(
                             imageVector = if (preferito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = if (preferito) "Preferito" else "Non preferito",
-                            tint = if (preferito) Color.Red else Color.Gray
+                            tint = if (preferito) Color.Red else PrimaryBackgroundColor
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
@@ -143,7 +142,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         Icon(
                             imageVector = androidx.compose.material.icons.Icons.Filled.Delete,
                             contentDescription = "Elimina carta",
-                            tint = Color.White
+                            tint = PrimaryBackgroundColor
                         )
                     }
                 }
@@ -157,7 +156,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Nome
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier
@@ -182,7 +181,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Gioco
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier
@@ -207,7 +206,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Set e Numero sulla stessa riga
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier
@@ -244,7 +243,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Rarità
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier
@@ -269,7 +268,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Artista
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier
@@ -294,7 +293,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                 // Contenitore per Condizioni
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+                    colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
                 ) {
                     Row(
                         modifier = Modifier

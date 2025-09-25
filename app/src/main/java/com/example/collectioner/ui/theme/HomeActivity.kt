@@ -57,7 +57,11 @@ class HomeActivity : ComponentActivity() {
                                     val intent = Intent(this@HomeActivity, ProfiloActivity::class.java)
                                     startActivity(intent)
                                 }) {
-                                    Icon(Icons.Filled.Person, contentDescription = "Profilo")
+                                    Icon(
+                                        Icons.Filled.Person,
+                                        contentDescription = "Profilo",
+                                        tint = PrimaryBackgroundColor
+                                    )
                                 }
                             }
                         )
@@ -204,6 +208,7 @@ class HomeActivity : ComponentActivity() {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(16.dp)
                                 .background(
                                     PrimaryBackgroundColor,
                                     shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
