@@ -161,10 +161,11 @@ class HomeActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .height(200.dp)
-                                            .padding(16.dp)
+                                            .padding(16.dp),
+                                        colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.White)
                                     )
                                     //Text(text = "Favourite Card", modifier = Modifier.padding(16.dp), color = Color.Black)
-                                    Text(text = "Aggiungi una carta ai preferiti per poterla visualizzare qui", color = Color.Black,
+                                    Text(text = "Aggiungi una carta ai preferiti per poterla visualizzare qui", color = Color.White,
                                         textAlign = TextAlign.Center)
                                 }
                             }

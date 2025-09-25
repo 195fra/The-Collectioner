@@ -26,7 +26,7 @@ class ProfiloActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
+                    Box(modifier = Modifier.fillMaxSize(), ) {
                         ProfiloScreen()
                         // Bottone indietro in alto a sinistra
                         androidx.compose.material3.IconButton(
@@ -81,8 +81,10 @@ fun ProfiloScreen() {
                 if (context is android.app.Activity) {
                     context.finish()
                 }
-            }) {
-                Text("LOG OUT")
+            },
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = PrimaryTextColor)
+            ) {
+                Text("LOG OUT", color = androidx.compose.ui.graphics.Color.White)
             }
         }
     }
