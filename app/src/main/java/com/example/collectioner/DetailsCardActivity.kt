@@ -212,28 +212,28 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Set:",
+                            "Set:  ",
                             color = Color.White,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(0.3f)
                         )
                         Text(
                             cardData.setCarta,
                             color = Color.White,
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                             modifier = Modifier.weight(1f),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            //textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
                         Text(
                             "Numero:",
                             color = Color.White,
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(0.4f)
                         )
                         Text(
                             cardData.numeroCarta,
                             color = Color.White,
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            modifier = Modifier.weight(1f),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            modifier = Modifier.weight(0.3f),
+                            //textAlign = androidx.compose.ui.text.style.TextAlign.End
                         )
                     }
                 }
