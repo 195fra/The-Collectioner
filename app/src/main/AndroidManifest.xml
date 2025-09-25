@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- permette l'utilizzo della camera-->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -50,12 +51,12 @@
             android:label="@string/title_activity_archive"
             android:theme="@style/Theme.Collectioner" />
         <activity
-            android:name=".ui.theme.HomeActivity"
+            android:name=".HomeActivity"
             android:exported="false"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.Collectioner" />
         <activity
-            android:name=".ui.theme.ProfiloActivity"
+            android:name=".ProfiloActivity"
             android:exported="false"
             android:label="ProfiloActivity"
             android:theme="@style/Theme.Collectioner" />

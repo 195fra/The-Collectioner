@@ -15,21 +15,10 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,11 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import coil.compose.rememberAsyncImagePainter
-import com.example.collectioner.ui.theme.BottomTabBar
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.PrimaryBackgroundColor
-import com.google.gson.Gson
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -75,7 +61,7 @@ class CameraActivity : ComponentActivity() {
                     CameraScreen(
                         onPhotoTaken = { uri ->
                             lastPhotoUri = uri
-                            // Passa l'URI a AddCardActivity
+                            // Passa l'URI a AddCardActivity se non è nullo
                             uri?.let {
                                 val intent = android.content.Intent(this, AddCardActivity::class.java)
                                 intent.putExtra("photoUri", it.toString())
@@ -90,7 +76,6 @@ class CameraActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(
     onPhotoTaken: (Uri?) -> Unit,
@@ -115,20 +100,19 @@ fun CameraScreen(
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageCapture: ImageCapture? by remember { mutableStateOf(null) }
 
-    var photoName by remember { mutableStateOf("") }  // per rinominare la foto
+    var photoName by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        //TopAppBar(title = { Text("Fotocamera") })
-
         if (hasCameraPermission) {
             AndroidView(
-                factory = { ctx ->
-                    val previewView = PreviewView(ctx)
-                    val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
+                //funzione per fare la foto
+                factory = { context ->
+                    val previewView = PreviewView(context)
+                    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
                     cameraProviderFuture.addListener({
                         val cameraProvider = cameraProviderFuture.get()
                         val preview = androidx.camera.core.Preview.Builder().build().also {
@@ -145,7 +129,7 @@ fun CameraScreen(
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                    }, ContextCompat.getMainExecutor(ctx))
+                    }, ContextCompat.getMainExecutor(context))
                     previewView
                 },
                 modifier = Modifier
@@ -155,13 +139,13 @@ fun CameraScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {
+                onClick = { // salva l'immagine
                     val validName = if (photoName.isNotBlank()) photoName else
                         "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}"
-                    // Se il nome esiste già, aggiungi un suffisso numerico per evitare sovrascrittura
                     var fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
                     val dir = context.filesDir
                     var file = File(dir, fileNameWithExtension)
+                    // evita di avere nomi duplicati
                     var suffix = 1
                     while (file.exists()) {
                         val baseName = validName.removeSuffix(".jpg")
@@ -175,12 +159,13 @@ fun CameraScreen(
                         ContextCompat.getMainExecutor(context),
                         object : ImageCapture.OnImageSavedCallback {
                             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                                // rende l'immagine accessibile
                                 imageUri = FileProvider.getUriForFile(
                                     context,
                                     context.packageName + ".provider",
                                     file
                                 )
-                                Toast.makeText(context, "Foto salvata come $fileNameWithExtension", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Foto salvata", Toast.LENGTH_SHORT).show()
                                 onPhotoTaken(imageUri)
                             }
 
@@ -196,9 +181,7 @@ fun CameraScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            /*if (imageUri != null) {
-                Text("Foto scattata")
-            }*/
+
         } else {
             Text("Permesso fotocamera necessario")
         }

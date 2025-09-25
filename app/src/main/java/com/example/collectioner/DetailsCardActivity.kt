@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.rememberAsyncImagePainter
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.PrimaryBackgroundColor
@@ -49,17 +47,16 @@ fun DetailsCardScreen(cardDataJson: String?) {
     }
     Box(
         modifier = Modifier
-            .fillMaxSize(), // RIMOSSO .background(Color.Black)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         if (cardData != null) {
-            // Aggiungi lo scroll
             val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .widthIn(max = 400.dp)
                     .padding(16.dp)
-                    .verticalScroll(scrollState), // Scroll verticale
+                    .verticalScroll(scrollState),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -86,9 +83,9 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
+                    // Aggiorna il valore preferito nel JSON
                     IconButton(onClick = {
                         preferito = !preferito
-                        // Aggiorna il valore nel JSON
                         val gson = Gson()
                         val fileName = "cards.json"
                         val file = java.io.File(context.filesDir, fileName)
@@ -114,6 +111,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                             tint = if (preferito) Color.Red else PrimaryBackgroundColor
                         )
                     }
+
                     Spacer(modifier = Modifier.width(12.dp))
                     // Bottone elimina carta
                     IconButton(onClick = {
@@ -130,17 +128,16 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         } else {
                             mutableListOf()
                         }
-                        // Rimuovi la carta corrente
+                        // Specifica quale carta
                         val removed = cardList.removeIf { it.nomeCarta == cardData.nomeCarta && it.numeroCarta == cardData.numeroCarta }
                         if (removed) {
                             file.writeText(gson.toJson(cardList))
-                            // Torna all'archivio dopo l'eliminazione
                             val intent = Intent(context, ArchiveActivity::class.java)
                             context.startActivity(intent)
                         }
                     }) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Filled.Delete,
+                            imageVector = Icons.Filled.Delete,
                             contentDescription = "Elimina carta",
                             tint = PrimaryBackgroundColor
                         )
@@ -153,7 +150,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         .size(400.dp)
                         .padding(8.dp)
                 )
-                // Contenitore per Nome
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -178,7 +175,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                 }
-                // Contenitore per Gioco
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -203,7 +200,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                 }
-                // Contenitore per Set e Numero sulla stessa riga
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -240,7 +237,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                 }
-                // Contenitore per Rarità
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -265,7 +262,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                 }
-                // Contenitore per Artista
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -290,7 +287,7 @@ fun DetailsCardScreen(cardDataJson: String?) {
                         )
                     }
                 }
-                // Contenitore per Condizioni
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = PrimaryBackgroundColor)
@@ -321,10 +318,4 @@ fun DetailsCardScreen(cardDataJson: String?) {
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetailsCardScreenPreview() {
-    DetailsCardScreen(cardDataJson = null)
 }

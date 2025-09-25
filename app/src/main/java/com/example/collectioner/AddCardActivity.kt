@@ -7,13 +7,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.collectioner.ui.theme.CollectionerTheme
-
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -39,7 +36,6 @@ class AddCardActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddCardScreen(photoUri: String) {
     var nomeCarta by remember { mutableStateOf("") }
@@ -98,7 +94,7 @@ fun AddCardScreen(photoUri: String) {
                 OutlinedTextField(
                     value = numeroCarta,
                     onValueChange = { newValue ->
-                        // Consenti solo numeri
+                        // Consente solo numeri
                         if (newValue.all { it.isDigit() }) {
                             numeroCarta = newValue
                         }
@@ -141,7 +137,7 @@ fun AddCardScreen(photoUri: String) {
                         raritaCarta = raritaCarta,
                         artistaCarta = artistaCarta,
                         condizioniCarta = condizioniCarta,
-                        preferito = false // aggiunto campo preferito
+                        preferito = false
                     )
                     val gson = Gson()
                     val fileName = "cards.json"
@@ -156,6 +152,7 @@ fun AddCardScreen(photoUri: String) {
                     } else {
                         mutableListOf()
                     }
+
                     cardList.add(cardData)
                     val jsonString = gson.toJson(cardList)
                     file.writeText(jsonString)
@@ -172,27 +169,6 @@ fun AddCardScreen(photoUri: String) {
         }
     }
 }
-@Preview(showBackground = true)
-@Composable
-fun AddCardScreenPreview() {
-    AddCardScreen(photoUri = "")
-}
 
 
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CollectionerTheme {
-        Greeting("Android")
-    }
-}*/
 

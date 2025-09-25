@@ -1,4 +1,4 @@
-package com.example.collectioner.ui.theme
+package com.example.collectioner
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.collectioner.ui.theme.ui.theme.CollectionerTheme
+import com.example.collectioner.ui.theme.CollectionerTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import com.example.collectioner.ui.theme.PrimaryTextColor
 
 class ProfiloActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,10 +28,8 @@ class ProfiloActivity : ComponentActivity() {
                 ) {
                     Box(modifier = Modifier.fillMaxSize(), ) {
                         ProfiloScreen()
-                        // Bottone indietro in alto a sinistra
                         androidx.compose.material3.IconButton(
                             onClick = {
-                                // Torna indietro di un passo nello stack delle activity
                                 finish()
                             },
                             modifier = Modifier
@@ -72,10 +70,8 @@ fun ProfiloScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
             androidx.compose.material3.Button(onClick = {
-                // Cancella la mail, nome e cognome salvati
                 sharedPref.edit().remove("email").remove("name").remove("surname").apply()
-                // Torna alla schermata MainActivity
-                val intent = android.content.Intent(context, com.example.collectioner.MainActivity::class.java)
+                val intent = android.content.Intent(context, MainActivity::class.java)
                 intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 if (context is android.app.Activity) {

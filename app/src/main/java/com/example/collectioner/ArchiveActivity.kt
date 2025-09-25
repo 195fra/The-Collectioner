@@ -1,19 +1,16 @@
 package com.example.collectioner
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,13 +19,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
-import androidx.core.content.FileProvider
 import com.example.collectioner.ui.theme.CollectionerTheme
-import com.example.collectioner.ui.theme.BottomTabBar
-import com.example.collectioner.ui.theme.PrimaryBackgroundColor
 import com.example.collectioner.ui.theme.PrimaryTextColor
 import com.google.gson.Gson
-import java.io.File
 
 class ArchiveActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +48,7 @@ fun ArchiveScreen() {
         R.drawable.image_4,
     )
 
-    // Stato per tracciare la categoria selezionata
+    // traccia la categoria selezionata
     var categoriaSelezionata by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
@@ -125,7 +118,6 @@ fun ArchiveScreen() {
 
             Text("Carte Salvate", color = PrimaryTextColor)
 
-            // Griglia con immagini filtrate per categoria
             ImageGridFromFiles(categoriaFiltro = categoriaSelezionata)
         }
     }
@@ -135,7 +127,7 @@ fun ArchiveScreen() {
 fun ImageGridFromFiles(categoriaFiltro: String?) {
     val context = LocalContext.current
     val gson = Gson()
-    // Carica la lista di CardData da cards.json
+    // Carica la lista dal file
     val cardList = remember(categoriaFiltro) {
         val file = java.io.File(context.filesDir, "cards.json")
         if (file.exists()) {
@@ -177,7 +169,7 @@ fun ImageGridFromFiles(categoriaFiltro: String?) {
                         .fillMaxWidth()
                         .aspectRatio(1f)
                         .clickable {
-                            // Passa i dati della carta selezionata come JSON
+
                             val intent = Intent(context, DetailsCardActivity::class.java)
                             val cardJson = gson.toJson(card)
                             intent.putExtra("cardDataJson", cardJson)

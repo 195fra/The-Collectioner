@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -32,7 +31,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.collectioner.ui.theme.HomeActivity
 import com.example.collectioner.ui.theme.PrimaryTextColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -60,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "Login_Screen") {
                     composable("Login_Screen") { Login_Screen(navController) }
-                    composable("Home_Screen") { Home_Screen() }
+
                 }
             }
         }
@@ -206,13 +204,6 @@ fun Login_Screen(navController: NavController) {
         }
         Spacer(modifier = Modifier.height(70.dp))
 
-    }
-}
-
-@Composable
-fun Home_Screen (){
-    Column{
-        Text("Home screen")
     }
 }
 
