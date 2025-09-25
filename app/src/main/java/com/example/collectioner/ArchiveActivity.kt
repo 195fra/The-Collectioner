@@ -24,6 +24,7 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.core.content.FileProvider
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.BottomTabBar
+import com.example.collectioner.ui.theme.PrimaryTextColor
 import com.google.gson.Gson
 import java.io.File
 
@@ -76,7 +77,7 @@ fun ArchiveScreen() {
 
             Spacer(Modifier.height(16.dp))
 
-            Text("I MIEI ALBUM", modifier = Modifier.align(Alignment.CenterHorizontally))
+            Text("I MIEI ALBUM", modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryTextColor)
 
             // Lista orizzontale con categorie
             Box(Modifier.height(100.dp)) {
@@ -115,7 +116,7 @@ fun ArchiveScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Carte Salvate")
+            Text("Carte Salvate", color = PrimaryTextColor)
 
             // Griglia con immagini filtrate per categoria
             ImageGridFromFiles(categoriaFiltro = categoriaSelezionata)

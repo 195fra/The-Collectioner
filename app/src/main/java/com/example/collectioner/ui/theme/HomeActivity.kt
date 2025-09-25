@@ -51,7 +51,7 @@ class HomeActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         CenterAlignedTopAppBar(
-                            title = { Text("The Collectioner") },
+                            title = { Text("The Collectioner", color = PrimaryTextColor) },
                             navigationIcon = {
                                 IconButton(onClick = {
                                     val intent = Intent(this@HomeActivity, ProfiloActivity::class.java)
@@ -132,7 +132,8 @@ class HomeActivity : ComponentActivity() {
                                 .height(500.dp)
                                 .padding(16.dp)
                                 .background(
-                                    Color(0xFFE0E0E0),
+                                    // = Color.White,
+                                    PrimaryBackgroundColor,
                                     shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -203,7 +204,7 @@ class HomeActivity : ComponentActivity() {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(
-                                    Color(0xFF222222),
+                                    PrimaryBackgroundColor,
                                     shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
                                 )
                                 .padding(16.dp),
@@ -221,7 +222,7 @@ class HomeActivity : ComponentActivity() {
                                             Text(text = cat, color = Color.White)
                                             Text(
                                                 text = cardCounts[cat]?.toString() ?: "0",
-                                                color = Color.Yellow,
+                                                color = Color.White,
                                                 style = MaterialTheme.typography.titleLarge
                                             )
                                         }

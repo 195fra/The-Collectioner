@@ -43,6 +43,7 @@ import androidx.core.content.FileProvider
 import coil.compose.rememberAsyncImagePainter
 import com.example.collectioner.ui.theme.BottomTabBar
 import com.example.collectioner.ui.theme.CollectionerTheme
+import com.example.collectioner.ui.theme.PrimaryBackgroundColor
 import com.google.gson.Gson
 import java.io.File
 import java.text.SimpleDateFormat
@@ -153,41 +154,44 @@ fun CameraScreen(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                val validName = if (photoName.isNotBlank()) photoName else
-                    "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}"
-                // Se il nome esiste già, aggiungi un suffisso numerico per evitare sovrascrittura
-                var fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
-                val dir = context.filesDir
-                var file = File(dir, fileNameWithExtension)
-                var suffix = 1
-                while (file.exists()) {
-                    val baseName = validName.removeSuffix(".jpg")
-                    fileNameWithExtension = "${baseName}_$suffix.jpg"
-                    file = File(dir, fileNameWithExtension)
-                    suffix++
-                }
-                val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
-                imageCapture?.takePicture(
-                    outputOptions,
-                    ContextCompat.getMainExecutor(context),
-                    object : ImageCapture.OnImageSavedCallback {
-                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                            imageUri = FileProvider.getUriForFile(
-                                context,
-                                context.packageName + ".provider",
-                                file
-                            )
-                            Toast.makeText(context, "Foto salvata come $fileNameWithExtension", Toast.LENGTH_SHORT).show()
-                            onPhotoTaken(imageUri)
-                        }
-
-                        override fun onError(exception: ImageCaptureException) {
-                            Toast.makeText(context, "Errore: ${exception.message}", Toast.LENGTH_SHORT).show()
-                        }
+            Button(
+                onClick = {
+                    val validName = if (photoName.isNotBlank()) photoName else
+                        "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())}"
+                    // Se il nome esiste già, aggiungi un suffisso numerico per evitare sovrascrittura
+                    var fileNameWithExtension = if (validName.endsWith(".jpg")) validName else "$validName.jpg"
+                    val dir = context.filesDir
+                    var file = File(dir, fileNameWithExtension)
+                    var suffix = 1
+                    while (file.exists()) {
+                        val baseName = validName.removeSuffix(".jpg")
+                        fileNameWithExtension = "${baseName}_$suffix.jpg"
+                        file = File(dir, fileNameWithExtension)
+                        suffix++
                     }
-                )
-            }) {
+                    val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
+                    imageCapture?.takePicture(
+                        outputOptions,
+                        ContextCompat.getMainExecutor(context),
+                        object : ImageCapture.OnImageSavedCallback {
+                            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                                imageUri = FileProvider.getUriForFile(
+                                    context,
+                                    context.packageName + ".provider",
+                                    file
+                                )
+                                Toast.makeText(context, "Foto salvata come $fileNameWithExtension", Toast.LENGTH_SHORT).show()
+                                onPhotoTaken(imageUri)
+                            }
+
+                            override fun onError(exception: ImageCaptureException) {
+                                Toast.makeText(context, "Errore: ${exception.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                },
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = PrimaryBackgroundColor)
+            ) {
                 Text("Scannerizza")
             }
 

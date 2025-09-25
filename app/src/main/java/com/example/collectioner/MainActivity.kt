@@ -34,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.collectioner.ui.theme.HomeActivity
+import com.example.collectioner.ui.theme.PrimaryTextColor
 
 
 class MainActivity : ComponentActivity() {
@@ -89,7 +90,9 @@ fun Login_Screen(navController: NavController) {
             modifier = Modifier
                 .align(androidx.compose.ui.Alignment.CenterHorizontally)
                 .padding(top = 30.dp),
-            fontSize = 30.sp)
+            fontSize = 30.sp,
+            color = PrimaryTextColor
+        )
 
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -176,9 +179,9 @@ fun Login_Screen(navController: NavController) {
             }
         },
         colors = ButtonColors(
-            containerColor = Color.Black,
+            containerColor = PrimaryTextColor,
             contentColor = Color.White,
-            disabledContentColor = Color.Black,
+            disabledContentColor = PrimaryTextColor,
             disabledContainerColor = Color.White
         ),
         modifier = Modifier
@@ -187,14 +190,13 @@ fun Login_Screen(navController: NavController) {
             .padding(horizontal = 20.dp, vertical = 20.dp),
         ) {
             Text("Accedi")
-
         }
 
-        Text("Se hai già un account effettua il login",
+        /*Text("Se hai già un account effettua il login",
             modifier = Modifier
                 .align(androidx.compose.ui.Alignment.CenterHorizontally)
                 .padding(bottom = 10.dp),
-            fontSize = 12.sp)
+            fontSize = 12.sp)*/
         Spacer(modifier = Modifier.height(70.dp))
 
     }
