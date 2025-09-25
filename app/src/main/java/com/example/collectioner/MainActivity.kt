@@ -69,6 +69,10 @@ fun Login_Screen(navController: NavController) {
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var nameError by remember { mutableStateOf(false) }
+    var surnameError by remember { mutableStateOf(false) }
+    var emailError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as? ComponentActivity
 
@@ -93,39 +97,59 @@ fun Login_Screen(navController: NavController) {
 
         OutlinedTextField(
             value = name,
-            onValueChange = { name = it },
+            onValueChange = {
+                name = it
+                nameError = it.isBlank()
+            },
             label = { Text("Nome") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth(),
-            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+            isError = nameError,
+            supportingText = { if (nameError) Text("Il nome non può essere vuoto", color = Color.Red, fontSize = 12.sp) }
         )
         OutlinedTextField(
             value = surname,
-            onValueChange = { surname = it },
+            onValueChange = {
+                surname = it
+                surnameError = it.isBlank()
+            },
+            label = { Text("Cognome") },
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth(),
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+            isError = surnameError,
+            supportingText = { if (surnameError) Text("Il cognome non può essere vuoto", color = Color.Red, fontSize = 12.sp) }
+        )
+        OutlinedTextField(
+            value = email,
+            onValueChange = {
+                email = it
+                emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(it).matches()
+            },
             label = { Text("Email") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth(),
-            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+            isError = emailError,
+            supportingText = { if (emailError) Text("Inserisci una mail valida", color = Color.Red, fontSize = 12.sp) }
         )
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = password,
+            onValueChange = {
+                password = it
+                passwordError = !isPasswordValid(it)
+            },
             label = { Text("Password") },
             modifier = Modifier
                 .padding(20.dp)
                 .fillMaxWidth(),
-            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Conferma Password") },
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxWidth(),
-            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black)
+            textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+            isError = passwordError,
+            supportingText = { if (passwordError) Text("La password deve contenere almeno 5 caratteri, un numero e un carattere speciale", color = Color.Red, fontSize = 12.sp) }
         )
 
 
@@ -133,12 +157,23 @@ fun Login_Screen(navController: NavController) {
 
 
         Button(onClick = {
-            // Salva la mail se compilata
-            if (email.isNotBlank()) {
-                activity?.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)?.edit()?.putString("email", email)?.apply()
+            nameError = name.isBlank()
+            surnameError = surname.isBlank()
+            emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+            passwordError = !isPasswordValid(password)
+            if (!nameError && !surnameError && !emailError && !passwordError) {
+                // Salva la mail, nome e cognome se compilati
+                if (email.isNotBlank()) {
+                    activity?.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)?.edit()?.apply {
+                        putString("email", email)
+                        putString("name", name)
+                        putString("surname", surname)
+                        apply()
+                    }
+                }
+                val intent = Intent(context, HomeActivity::class.java)
+                context.startActivity(intent)
             }
-            val intent = Intent(context, HomeActivity::class.java)
-            context.startActivity(intent)
         },
         colors = ButtonColors(
             containerColor = Color.Black,
@@ -189,3 +224,9 @@ fun GreetingPreview() {
     }
 }*/
 
+// Funzione di validazione password
+fun isPasswordValid(password: String): Boolean {
+    val specialChar = password.any { !it.isLetterOrDigit() }
+    val digit = password.any { it.isDigit() }
+    return password.length >= 5 && specialChar && digit
+}

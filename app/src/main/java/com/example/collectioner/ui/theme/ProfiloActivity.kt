@@ -34,6 +34,8 @@ class ProfiloActivity : ComponentActivity() {
 fun ProfiloScreen() {
     val context = LocalContext.current
     val sharedPref = context.getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+    val name = sharedPref.getString("name", "") ?: ""
+    val surname = sharedPref.getString("surname", "") ?: ""
     val email = sharedPref.getString("email", "") ?: ""
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -42,13 +44,16 @@ fun ProfiloScreen() {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(text = "Profilo", style = MaterialTheme.typography.headlineMedium)
             Spacer(modifier = Modifier.height(24.dp))
-            Text(text = "Email salvata:", style = MaterialTheme.typography.bodyLarge)
+            Text(text = "$name", style = MaterialTheme.typography.bodyLarge)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = email, style = MaterialTheme.typography.bodyLarge)
+            Text(text = "$surname", style = MaterialTheme.typography.bodyLarge)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "Email: $email", style = MaterialTheme.typography.bodyLarge)
+
             Spacer(modifier = Modifier.height(32.dp))
             androidx.compose.material3.Button(onClick = {
-                // Cancella la mail salvata
-                sharedPref.edit().remove("email").apply()
+                // Cancella la mail, nome e cognome salvati
+                sharedPref.edit().remove("email").remove("name").remove("surname").apply()
                 // Torna alla schermata MainActivity
                 val intent = android.content.Intent(context, com.example.collectioner.MainActivity::class.java)
                 intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP or android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
