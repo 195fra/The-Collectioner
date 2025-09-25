@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -24,6 +25,7 @@ import coil.compose.rememberAsyncImagePainter
 import androidx.core.content.FileProvider
 import com.example.collectioner.ui.theme.CollectionerTheme
 import com.example.collectioner.ui.theme.BottomTabBar
+import com.example.collectioner.ui.theme.PrimaryBackgroundColor
 import com.example.collectioner.ui.theme.PrimaryTextColor
 import com.google.gson.Gson
 import java.io.File
@@ -42,7 +44,7 @@ class ArchiveActivity : ComponentActivity() {
 
 @Composable
 fun ArchiveScreen() {
-    var ricerca by remember { mutableStateOf("") }
+    //var ricerca by remember { mutableStateOf("") }
 
     val categorie = listOf("tutti","pokemon", "yugioh", "magic", "dragonball")
     val imageResIds = listOf(
@@ -80,11 +82,16 @@ fun ArchiveScreen() {
             Text("I MIEI ALBUM", modifier = Modifier.align(Alignment.CenterHorizontally), color = PrimaryTextColor)
 
             // Lista orizzontale con categorie
-            Box(Modifier.height(100.dp)) {
+            Box(Modifier.height(100.dp)
+                /*.background(
+                    PrimaryBackgroundColor,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+            )*/) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp)
+                        .padding(8.dp),
+
                 ) {
                     items(categorie.size) { index ->
                         Column(
@@ -149,6 +156,7 @@ fun ImageGridFromFiles(categoriaFiltro: String?) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
+
             contentAlignment = Alignment.Center
         ) {
             Text("Non hai ancora salvato nessuna carta in questa categoria")

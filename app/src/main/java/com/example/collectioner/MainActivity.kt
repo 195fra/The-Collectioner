@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.collectioner.ui.theme.CollectionerTheme
@@ -35,6 +34,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.collectioner.ui.theme.HomeActivity
 import com.example.collectioner.ui.theme.PrimaryTextColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 
 class MainActivity : ComponentActivity() {
@@ -62,8 +67,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
 @Composable
 fun Login_Screen(navController: NavController) {
     var name by remember { mutableStateOf("") }
@@ -76,6 +79,8 @@ fun Login_Screen(navController: NavController) {
     var passwordError by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val activity = context as? ComponentActivity
+    var passwordVisible by remember { mutableStateOf(false) }
+
 
 
     Column (
@@ -152,7 +157,15 @@ fun Login_Screen(navController: NavController) {
                 .fillMaxWidth(),
             textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
             isError = passwordError,
-            supportingText = { if (passwordError) Text("La password deve contenere almeno 5 caratteri, un numero e un carattere speciale", color = Color.Red, fontSize = 12.sp) }
+            supportingText = { if (passwordError) Text("La password deve contenere almeno 5 caratteri, un numero e un carattere speciale", color = Color.Red, fontSize = 12.sp) },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                val image = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
+                val description = if (passwordVisible) "Nascondi password" else "Mostra password"
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    androidx.compose.material3.Icon(imageVector = image, contentDescription = description)
+                }
+            }
         )
 
 
@@ -191,12 +204,6 @@ fun Login_Screen(navController: NavController) {
         ) {
             Text("Accedi")
         }
-
-        /*Text("Se hai già un account effettua il login",
-            modifier = Modifier
-                .align(androidx.compose.ui.Alignment.CenterHorizontally)
-                .padding(bottom = 10.dp),
-            fontSize = 12.sp)*/
         Spacer(modifier = Modifier.height(70.dp))
 
     }
@@ -208,23 +215,6 @@ fun Home_Screen (){
         Text("Home screen")
     }
 }
-
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CollectionerTheme {
-        Greeting("Android")
-    }
-}*/
 
 // Funzione di validazione password
 fun isPasswordValid(password: String): Boolean {
