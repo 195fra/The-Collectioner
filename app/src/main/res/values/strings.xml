@@ -2,5 +2,4 @@
     <string name="app_name">Collectioner</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_activity_archive">ArchiveActivity</string>
-    <string name="title_activity_splash">SplashActivity</string>
 </resources>
